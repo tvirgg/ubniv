@@ -1,54 +1,33 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
-import Palitra from "./components/Palitra";
-import { TouchableOpacity } from 'react-native'
-import BtnComp from "./components/BtnComp";
-import {Image} from "react-native";
+import image from './assets/nebula_stock_2_by_cosmicspark_d9z60dd-fullview.jpg'
+import {StyleSheet, View, ImageBackground, Text} from 'react-native';
+import { Provider} from 'react-redux';
+import Splash from "./components/Palitra_main";
+import { store, persistor} from './store';
+import { PersistGate } from 'redux-persist/integration/react'
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Palitra></Palitra>
-        <View style={styles.blth__block}>
-            <TouchableOpacity
-                style={styles.buttonFacebookStyle}
-                activeOpacity={0.5}>
-                <Image
-                    source={{
-                        uri:
-                            'https://i.postimg.cc/WzzyyGnS/Screenshot-3.jpg',
-                    }}
-                    style={styles.buttonImageIconStyle}
-                />
-            </TouchableOpacity>
-        </View>
-      <BtnComp></BtnComp>
-    </View>
-  );
+      <View style={styles.container}>
+          <ImageBackground source={image} style={styles.image}>
+              <Provider store={store}>
+                  <PersistGate loading={null} persistor={persistor}>
+                      <Splash></Splash>
+                  </PersistGate>
+              </Provider>
+          </ImageBackground>
+      </View>
+);
+
+
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: '15%',
-    flexDirection: 'column',
-    backgroundColor: '#fff'
-  },
-    blth__block:{
-        width: "30%",
-        marginLeft: "auto"
+    container: {
+    flex: 1
     },
-    buttonFacebookStyle: {
-        justifyContent: 'flex-end',
-        flexDirection: 'row',
-        borderColor: '#fff',
-        height: 100,
-        width: 90,
-    },
-    buttonImageIconStyle: {
-        padding: 0,
-        margin: 0,
-        height: 100,
-        width: 90,
-        resizeMode: 'stretch',
+    image: {
+        flex: 1,
+        resizeMode: "cover",
+        justifyContent: "center"
     }
 });
