@@ -1,11 +1,39 @@
-import React, { useState } from "react";
-import {StyleSheet, View, Dimensions, Text} from "react-native";
+import React, {useState} from "react";
+import {Dimensions, StyleSheet, Text, TouchableHighlight, View} from "react-native";
 import CircleSlider from "react-native-circle-slider/CircleSlider";
 import ColorPicker from 'react-native-wheel-color-picker';
+import {connect} from "react-redux";
+import {setCurrentLocationC} from "../store";
 
 
 
-export default function CircleSliderContainer () {
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setCurrentLocation: (location) => {
+            dispatch(setCurrentLocationC(location))
+        }
+    };
+}
+
+class CircleSliderContainer extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    render() {
+        return (
+            <CircleSliderF setCurrentLocation={this.props.setCurrentLocation}></CircleSliderF>
+        );
+    }
+}
+
+
+
+
+
+
+
+function CircleSliderF(props) {
 
     const RGB_MAX = 255
     const HUE_MAX = 360
@@ -16,7 +44,9 @@ export default function CircleSliderContainer () {
     const rgb2Hsv = (r, g, b) => {
         if (typeof r === 'object') {
             const args = r
-            r = args.r; g = args.g; b = args.b;
+            r = args.r;
+            g = args.g;
+            b = args.b;
         }
 
         // It converts [0,255] format, to [0,1]
@@ -60,7 +90,9 @@ export default function CircleSliderContainer () {
     const hsv2Rgb = (h, s, v) => {
         if (typeof h === 'object') {
             const args = h
-            h = args.h; s = args.s; v = args.v;
+            h = args.h;
+            s = args.s;
+            v = args.v;
         }
 
         h = normalize(h)
@@ -87,7 +119,9 @@ export default function CircleSliderContainer () {
     const rgb2Hex = (r, g, b) => {
         if (typeof r === 'object') {
             const args = r
-            r = args.r; g = args.g; b = args.b;
+            r = args.r;
+            g = args.g;
+            b = args.b;
         }
         r = Math.round(r).toString(16)
         g = Math.round(g).toString(16)
@@ -119,6 +153,7 @@ export default function CircleSliderContainer () {
     const [status, setStatus] = useState(0);
     const [sc, setSc] = useState('#FFFFFF');
     const [comc, setComc] = useState('#FFFFFF');
+
     function LightenDarkenColor(col, amt) {
         col = col.substr(1);
         let hsv = hex2Hsv(col);
@@ -126,35 +161,48 @@ export default function CircleSliderContainer () {
     }
 
     function LightenDarkenColorCallback(amt) {
-        amt = 100 - ((amt/360)*100);
-        return(LightenDarkenColor(sc, amt));
+        amt = 100 - ((amt / 360) * 100);
+        return (LightenDarkenColor(sc, amt));
     }
+
     return (
-        <View style={{flex: 1, flexDirection: 'column'} }>
-            <View style={{alignItems: "center", paddingTop: 30,  position: 'absolute', left: '42%'}}>
-                <CircleSlider dialRadius={220} value={185} meterColor={'white'} btnRadius = {15} min={185} max={359} xCenter={Dimensions.get("window").width} onValueChange={(x) => setStatus(x)} />
+        <View style={{flex: 1, flexDirection: 'column'}}>
+            <View style={{alignItems: "center", paddingTop: 30, position: 'absolute', left: '42%'}}>
+                <CircleSlider dialRadius={220} value={185} meterColor={'white'} btnRadius={15} min={185} max={359}
+                              xCenter={Dimensions.get("window").width} onValueChange={(x) => setStatus(x)}/>
                 <ColorPicker
                     style={[styles.box, {
-                        transform: [{ rotate: `${status}deg` }],
+                        transform: [{rotate: `${status}deg`}],
                         transformOrigin: 'center'
                     }]}
-                    onColorChange={ (x) => setSc(x)}
+                    onColorChange={(x) => setSc(x)}
                     thumbSize={30}
                     noSnap={false}
                     row={false}
                 />
             </View>
-            <View style={{alignItems: "center", paddingTop: 30,  position: 'absolute', top: 400, left: 50 }}>
-                <CircleSlider dialRadius={100} value={1} meterColor={'white'} btnRadius = {15} min={0} max={359} yCenter={400}  onValueChange={(x) => LightenDarkenColorCallback(x)}/>
-                <View style={[styles.mini_c, { backgroundColor: `${comc}`}]}>
+            <View style={{alignItems: "center", paddingTop: 30, position: 'absolute', top: 400, left: 50}}>
+                <CircleSlider dialRadius={100} value={1} meterColor={'white'} btnRadius={15} min={0} max={359}
+                              yCenter={400} onValueChange={(x) => LightenDarkenColorCallback(x)}/>
+                <View style={[styles.mini_c, {backgroundColor: `${comc}`}]}>
                     <Text style={{color: 'white'}}>
                         {comc}
                     </Text>
                 </View>
             </View>
+            <View>
+                <TouchableHighlight
+                    style={styles.loginScreenButton}
+                    onPress={() => { props.setCurrentLocation("HOME")
+                    }}
+                    underlayColor='transparent'>
+                    <Text style={styles.loginText}>BACK</Text>
+                </TouchableHighlight>
+            </View>
         </View>
 
-    );}
+    );
+}
 const styles = StyleSheet.create({
     box:{
         position: 'absolute',
@@ -166,5 +214,18 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 95,
         borderRadius: 90,
+    },
+    loginScreenButton:{
+        paddingTop:40,
+        paddingBottom:10,
+    },
+    loginText:{
+        color:'#fff',
+        textAlign:'center',
+        paddingLeft : 10,
+        paddingRight : 10,
+        fontSize: 60,
+        lineHeight: 80
     }
 });
+export default connect(null, mapDispatchToProps)(CircleSliderContainer)

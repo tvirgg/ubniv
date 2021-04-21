@@ -20,7 +20,7 @@ class Hypage extends React.Component {
             <View>
                 <TouchableHighlight
                     style={styles.loginScreenButton}
-                    onPress={() => { this.props.setCurrentLocation("PALITRA")
+                    onPress={() => { this.props.setCurrentLocation("CHOOSE")
                     }}
                     underlayColor='transparent'>
                     <Text style={styles.loginText}>LAMPLY</Text>
@@ -43,4 +43,4 @@ const styles = StyleSheet.create({
         lineHeight: 80
     }
 });
-export default connect(null, mapDispatchToProps)(Hypage)
+export default connect(null, mapDispatchToProps)(Hypage);

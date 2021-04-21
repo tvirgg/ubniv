@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-const HOME = "";
 import { connect } from 'react-redux';
 import Hypage from "./HYpage";
 import CircleSliderContainer from "./Stick_main";
+import ChooseComponent from "./ChooseComponent";
 
 
 const mapStateToProps = (state) => {
@@ -23,6 +23,8 @@ class Splash extends Component {
                 return <Hypage></Hypage>;
             case "PALITRA":
                 return <CircleSliderContainer></CircleSliderContainer>;
+            case "CHOOSE":
+                return <ChooseComponent></ChooseComponent>;
             default:
                 return <Hypage></Hypage>;
         }
